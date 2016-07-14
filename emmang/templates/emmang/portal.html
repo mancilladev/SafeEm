@@ -1,0 +1,66 @@
+{% extends 'emmang/base.html' %}
+{% load staticfiles %}
+
+{% block content %}
+<div class="ui fixed inverted menu">
+  <div class="ui container">
+    <a href="" class="header item">
+      <img class="logo" src="{% static "img/icon-white.png" %}">
+      Emmang
+    </a>
+    <a href="" class="item">Tareas</a>
+    <a href="" class="item">Mi perfil</a>
+    <a href="{% url 'logout' %}" class="right item">Cerrar sesión</a>
+  </div>
+</div>
+
+<div class="ui main text container contenido-portal">
+  <h1 class="ui center aligned header">Empleados</h1>
+  <div class="ui very relaxed middle aligned divided list">
+    <div class="item">
+      <img class="ui avatar image" src="{% static "img/pilot.png" %}">
+      <div class="content">
+        <a href="" class="header">Howard Roark</a>
+        <div class="description">Dirección</div>
+      </div>
+    </div>
+    <div class="item">
+      <img class="ui avatar image" src="{% static "img/businessman.png" %}">
+      <div class="content">
+        <a href="" class="header">Peter Keating</a>
+        <div class="description">Gerencia</div>
+      </div>
+    </div>
+    <div class="item">
+      <img class="ui avatar image" src="{% static "img/teacher.png" %}">
+      <div class="content">
+        <a href="" class="header">Dominique Francon</a>
+        <div class="description">Marketing</div>
+      </div>
+    </div>
+    <div class="item">
+      <img class="ui avatar image" src="{% static "img/croupier.png" %}">
+      <div class="content">
+        <a href="" class="header">Ellsworth Toohey</a>
+        <div class="description">Contaduría</div>
+      </div>
+    </div>
+    <div class="item">
+      <img class="ui avatar image" src="{% static "img/dj.png" %}">
+      <div class="content">
+        <a href="" class="header">Steven Mallory</a>
+        <div class="description">Desarrollo Software</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="ui inverted vertical footer segment">
+  <div class="ui center aligned container">
+    <div class="ui horizontal inverted small divided link list">
+      <a class="item" href="{% url 'emmang:home' %}">Regresar al sitio web</a>
+      <a class="item" href="{% url 'logout' %}">Cerrar sesión</a>
+    </div>
+  </div>
+</div>
+{% endblock content %}
