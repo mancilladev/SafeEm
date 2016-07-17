@@ -23,3 +23,13 @@ class ComentarioForm(forms.ModelForm):
     class Meta:
         model = Comentario
         fields = ['texto']
+
+class EmpleadoForm(forms.ModelForm):
+    class Meta:
+        model = Empleado
+        fields = ['puesto','descripcion','imagen']
+
+class TareaForm(forms.ModelForm):
+    class Meta:
+        model = Tarea
+        fields = ['tema','texto','archivo']

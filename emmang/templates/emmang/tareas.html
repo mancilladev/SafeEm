@@ -47,13 +47,13 @@
         {% endif %}
         <div class="content">
           <a class="header" href="{% url 'emmang:tarea' pk=tarea.pk %}">{{tarea.tema}}</a>
-          <div class="description">Tarea creada {{tarea.fecha|naturaltime|lower}}</div>
+          <div class="description">Tarea creada por <a href="{% url 'emmang:perfil' pk=tarea.creador.pk %}">{{tarea.creador}}</a> {{tarea.fecha|naturaltime|lower}}</div>
         </div>
       </div>
       {% endfor %}
     </div>
   </div>
-  
+
 </div>
 {% include 'emmang/footer.html' %}
 {% endblock content %}

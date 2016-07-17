@@ -49,12 +49,12 @@
         {% for empleado in empleados %}
         <div class="item">
           {% if empleado.imagen %}
-            <img class="ui avatar image" src="media/{{empleado.imagen.url}}">
+            <img class="ui avatar image" src="{{empleado.imagen.url}}">
           {% else %}
             <img class="ui avatar image" src="{% static "img/smallmatthew.png" %}">
           {% endif %}
           <div class="content">
-            <a href="{% url 'emmang:perfil' pk=empleado.pk %}" class="header">{{empleado.usuario.username}}</a>
+            <a href="{% url 'emmang:perfil' pk=empleado.pk %}" class="header">{{empleado}}</a>
             <div class="description">{{empleado.puesto}}</div>
           </div>
         </div>

@@ -4,6 +4,8 @@
 {% block content %}
 {% include 'emmang/navbar.html' %}
 <div class="ui main text container contenido-portal">
+
+  {% if user.is_staff %}
   <div class="ui basic segment">
     <h1 class="ui center aligned header">Nuevo empleado</h1>
     {% if message %}
@@ -64,6 +66,15 @@
       <button type="submit" class="ui primary right floated button">Registrar</button>
    </form>
  </div>
+ {% else %}
+ <div class="ui warning message">
+   <i class="close icon"></i>
+    <div class="header">
+      Lamentamos las inconveniencias
+    </div>
+    <p>Solo el staff puede agregar nuevos empleados.</p>
+  </div>
+ {% endif %}
 
  <div class="ui basic separated segment">
    <h1 class="ui center aligned header">Empleados</h1>
@@ -71,7 +82,7 @@
      {% for empleado in empleados %}
      <div class="item">
        {% if empleado.imagen %}
-         <img class="ui avatar image" src="media/{{empleado.imagen.url}}">
+         <img class="ui avatar image" src="{{empleado.imagen.url}}">
        {% else %}
          <img class="ui avatar image" src="{% static "img/smallmatthew.png" %}">
        {% endif %}

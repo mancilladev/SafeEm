@@ -2,8 +2,54 @@
 {% load staticfiles %}
 {% load humanize %}
 
+{% block heavyjs %}
+<script type="text/javascript">
+$(document).ready(function() {
+
+  $('#editar').click(function(e) {
+    e.preventDefault();
+    $('.ui.modal').modal('show');
+  });
+
+  $('#divUpload').on("click", function() {
+    $('#hidden-new-file').click();
+  });
+
+  $('#hidden-new-file').change(function() {
+    var fname = $(this).val().split('\\').pop();
+    $('#file-name').text(fname);
+  });
+
+});
+</script>
+{% endblock heavyjs %}
+
 {% block content %}
 {% include 'emmang/navbar.html' %}
+
+{% if can_edit %}
+<div class="ui modal">
+  <div class="header">Editar información</div>
+  <div class="content">
+    <form class="ui form" action="{% url 'emmang:tarea_editar' pk=tarea.pk %}" method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      <div class="field">
+        <label>Tema</label>
+        <input type="text" name="tema" value="{{tarea.tema}}">
+      </div>
+      <div class="field">
+        <label>Información</label>
+        <textarea rows="2" name="texto">{{tarea.texto|default:"Descripción"}}</textarea>
+      </div>
+      <div class="ui button" id="divUpload">
+          <i class="file icon"></i> <span id="file-name">{{tarea.archivo|default:"Adjuntar"}}</span>
+      </div>
+      <input type="file" id="hidden-new-file" style="display: none" name="archivo" onchange="cambiarNombre()">
+      <button type="submit" class="ui primary right floated button"><i class="edit icon"></i> Editar</button>
+    </form>
+  </div>
+</div>
+{% endif %}
 
 <div class="ui main text container contenido-portal">
   <div class="ui centered raised big card">
@@ -21,11 +67,11 @@
         <a class="ui secondary button" href="{{tarea.archivo.url}}"><i class="download icon"></i>{{tarea.archivo}}</a>
       {% endif %}
       {% if can_edit %}
-        <span class="right floated">
-          <i class="edit big icon"></i>
-        </span>
+        <a class="right floated">
+          <i class="edit big icon" id="editar"></i>
+        </a>
       {% elif tarea.creador.imagen %}
-          <a class="right floated author" href="{% url 'emmang:perfil' pk=tarea.creador.pk %}"><img class="ui avatar image" src="media/{{tarea.creador.imagen}}"> {{tarea.creador.puesto}}</a>
+          <a class="right floated author" href="{% url 'emmang:perfil' pk=tarea.creador.pk %}"><img class="ui avatar image" src="{{tarea.creador.imagen.url}}"> {{tarea.creador.puesto}}</a>
         {% else %}
             <a class="right floated author" href="{% url 'emmang:perfil' pk=tarea.creador.pk %}"><img class="ui avatar image" src="{% static "img/smallmatthew.png" %}"> {{tarea.creador.puesto}}</a>
         {% endif %}
@@ -38,7 +84,11 @@
     {% for comentario in comentarios %}
     <div class="comment">
       <a class="avatar">
+        {% if comentario.empleado.imagen %}
+        <img src="{{comentario.empleado.imagen.url}}">
+        {% else %}
         <img src="{% static "img/smallmatthew.png" %}">
+        {% endif %}
       </a>
       <div class="content">
         <a class="author" href="{% url 'emmang:perfil' pk=comentario.empleado.pk %}">{{comentario.empleado.puesto}}</a>

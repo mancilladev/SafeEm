@@ -2,15 +2,62 @@
 {% load staticfiles %}
 {% load humanize %}
 
+{% block heavyjs %}
+<script type="text/javascript">
+$(document).ready(function() {
+
+  $('#editar').click(function(e) {
+    e.preventDefault();
+    $('.ui.modal').modal('show');
+  });
+
+  $('#divUpload').on("click", function() {
+    $('#hidden-new-file').click();
+  });
+
+  $('#hidden-new-file').change(function() {
+    var fname = $(this).val().split('\\').pop();
+    $('#file-name').text(fname);
+  });
+
+});
+</script>
+{% endblock heavyjs %}
+
 {% block content %}
 {% include 'emmang/navbar.html' %}
+
+{% if can_edit %}
+<div class="ui modal">
+  <div class="header">Editar información</div>
+  <div class="content">
+    <form class="ui form" action="{% url 'emmang:perfil_editar' %}" method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      <div class="field">
+        <label>Puesto</label>
+        <input type="text" name="puesto" value="{{empleado.puesto}}">
+      </div>
+      <div class="field">
+        <label>Short Text</label>
+        <textarea rows="2" name="descripcion">{{empleado.descripcion|default:""}}</textarea>
+      </div>
+      <div class="ui button" id="divUpload">
+          <i class="image icon"></i> <span id="file-name">{{empleado.imagen|default:"Agregar imagen"}}</span>
+      </div>
+      <input type="file" id="hidden-new-file" style="display: none" name="imagen" onchange="cambiarNombre()">
+      <button type="submit" class="ui primary right floated button"><i class="edit icon"></i> Editar</button>
+    </form>
+  </div>
+</div>
+{% endif %}
+
 <div class="ui main text container contenido-portal">
   <div class="ui stackable two column grid">
     <div class="column">
       <div class="ui centered card">
         <div class="image">
           {% if empleado.imagen %}
-          <img src="media/{{empleado.imagen.url}}">
+          <img src="{{empleado.imagen.url}}" alt="{{empleado.imagen.url}}">
           {% else %}
           <img src="{% static "img/matthew.png" %}">
           {% endif %}
@@ -25,9 +72,11 @@
           </div>
         </div>
         <div class="extra content">
+          {% if can_edit %}
           <span class="right floated">
-            <a href=""><i class="large edit icon"></i></a>
+            <a href="" id="editar"><i class="large edit icon"></i></a>
           </span>
+          {% endif %}
           <span>
             <i class="feed icon"></i>
             {{tareas|length}} Tareas
@@ -47,7 +96,7 @@
               <i class="large idea middle aligned icon"></i>
             {% endif %}
             <div class="content">
-              <a class="header" href="">{{tarea.tema}}</a>
+              <a class="header" href="{% url 'emmang:tarea' pk=tarea.pk %}">{{tarea.tema}}</a>
               <div class="description">{{tarea.fecha|naturaltime}}</div>
             </div>
           </div>
