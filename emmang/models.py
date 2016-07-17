@@ -32,7 +32,6 @@ class Tarea(models.Model):
 class ComentarioAbstracto(models.Model):
     texto = models.TextField()
     fecha = models.DateTimeField()
-    archivo = models.FileField(upload_to='docs/')
 
     class Meta:
         abstract=True

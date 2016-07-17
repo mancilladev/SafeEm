@@ -12,6 +12,19 @@ body {
   padding: 2em 0em;
 }
 
-.ui.separated.segment {
+.ui.separated.segment, .ui.separated.comments {
   margin-top: 5rem;
+}
+
+.ui.separated.form {
+  margin-top: 2rem;
+  margin-bottom: 7rem;
+}
+
+.ui.separated.header {
+  margin-top: 5rem;
+}
+
+.ui.big.card {
+  width: 500px;
 }

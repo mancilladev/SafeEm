@@ -10,14 +10,58 @@
       <div class="ui success message">
         <i class="close icon"></i>
         <div class="header">
-          Empleado registrada.
+          Nuevo empleado registrado
         </div>
         <p>{{message}}</p>
       </div>
     {% endif %}
-    <form class="ui form" action="" method="post" enctype="multipart/form-data">
+    <form class="ui form" action="" method="post" enctype="multipart/form-data" id="employee-form">
       {% csrf_token %}
-      {{form}}
+      {% if form.password2.errors %}
+      <div class="ui negative message">
+        <i class="close icon"></i>
+        <div class="header">
+          {{ form.password2.errors.as_text }}
+        </div>
+      </div>
+      {% endif %}
+      <div class="four fields">
+        <div class="field">
+          <label>E-mail</label>
+          <input type="email" name="email" placeholder="john@doe.com" required="">
+        </div>
+        <div class="field">
+          <label>Puesto</label>
+          <input type="text" name="puesto" placeholder="Gerente" required="">
+        </div>
+        <div class="field">
+          <label>Nombre(s)</label>
+          <input type="text" name="first_name" placeholder="John" required="">
+        </div>
+        <div class="field">
+          <label>Apellido(s)</label>
+          <input type="text" name="last_name" placeholder="Doe" required="">
+        </div>
+      </div>
+      <div class="three fields">
+        <div class="field">
+          <label>Nombre de usuario</label>
+          <input type="text" name="username" placeholder="johndoe" required="">
+        </div>
+        <div class="field">
+          <label>Password <i>(Minimo 8 caracteres)</i></label>
+          <div class="ui input" id="pass1-container">
+            <input type="password" name="password1" id="pass1" required="">
+          </div>
+        </div>
+        <div class="field">
+          <label>Confirmar password</label>
+          <div class="ui input" id="pass1-container">
+            <input type="password" name="password2" id="pass1" required="">
+          </div>
+        </div>
+      </div>
+      <button type="submit" class="ui primary right floated button">Registrar</button>
    </form>
  </div>
 
@@ -32,7 +76,7 @@
          <img class="ui avatar image" src="{% static "img/smallmatthew.png" %}">
        {% endif %}
        <div class="content">
-         <a href="" class="header">{{empleado.usuario.username}}</a>
+         <a href="{% url 'emmang:perfil' pk=empleado.pk %}" class="header">{{empleado.usuario.username}}</a>
          <div class="description">{{empleado.puesto}}</div>
        </div>
      </div>

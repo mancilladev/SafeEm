@@ -1,0 +1,74 @@
+{% extends 'emmang/base.html' %}
+{% load staticfiles %}
+{% load humanize %}
+
+{% block content %}
+{% include 'emmang/navbar.html' %}
+
+<div class="ui main text container contenido-portal">
+  <div class="ui centered raised big card">
+    <div class="content">
+      <div class="header">{{tarea.tema}}</div>
+      <div class="meta">
+        <span class="category">{{tarea.fecha|naturaltime}}</span>
+      </div>
+      <div class="description">
+        <p>{{tarea.texto}}</p>
+      </div>
+    </div>
+    <div class="extra content">
+      {% if tarea.archivo %}
+        <a class="ui secondary button" href="{{tarea.archivo.url}}"><i class="download icon"></i>{{tarea.archivo}}</a>
+      {% endif %}
+      {% if can_edit %}
+        <span class="right floated">
+          <i class="edit big icon"></i>
+        </span>
+      {% elif tarea.creador.imagen %}
+          <a class="right floated author" href="{% url 'emmang:perfil' pk=tarea.creador.pk %}"><img class="ui avatar image" src="media/{{tarea.creador.imagen}}"> {{tarea.creador.puesto}}</a>
+        {% else %}
+            <a class="right floated author" href="{% url 'emmang:perfil' pk=tarea.creador.pk %}"><img class="ui avatar image" src="{% static "img/smallmatthew.png" %}"> {{tarea.creador.puesto}}</a>
+        {% endif %}
+      </a>
+    </div>
+  </div>
+
+  <div class="ui threaded separated comments">
+    <h3 class="ui dividing header">Commentarios</h3>
+    {% for comentario in comentarios %}
+    <div class="comment">
+      <a class="avatar">
+        <img src="{% static "img/smallmatthew.png" %}">
+      </a>
+      <div class="content">
+        <a class="author" href="{% url 'emmang:perfil' pk=comentario.empleado.pk %}">{{comentario.empleado.puesto}}</a>
+        <div class="metadata">
+          <span class="date">{{comentario.fecha|naturaltime}}</span>
+        </div>
+        <div class="text">
+          {{comentario.texto}}
+        </div>
+        <!-- <div class="actions">
+          <a class="reply">Reply</a>
+        </div> -->
+      </div>
+    </div>
+    {% empty %}
+    <div class="ui basic center aligned segment">
+      <p>Aún no hay comentarios</p>
+    </div>
+    {% endfor %}
+    <form class="ui separated form" action="/portal/comentario/{{self_pk}}/{{tarea.pk}}/" method="post">
+      {% csrf_token %}
+      <div class="field">
+        <textarea rows="2" name="texto"></textarea>
+      </div>
+      <button type="submit" class="ui right floated primary icon button">
+        Comentar <i class="icon edit"></i>
+      </button>
+    </form>
+  </div>
+
+</div>
+{% include 'emmang/footer.html' %}
+{% endblock content %}

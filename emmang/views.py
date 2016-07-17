@@ -1,17 +1,21 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 
-from .models import Empleado, Tarea
-from .forms import TareaForm
+from .models import Empleado, Tarea, Comentario
+from .forms import TareaForm, UserCreateForm, ComentarioForm
 
 def home(request):
-    # print(request.get_full_path())
     return render(request, 'emmang/home.html')
 
 @login_required
 def portal(request):
-    return render(request, 'emmang/portal.html')
+    empleados = Empleado.objects.all()
+    tareas = Tarea.objects.all()
+    tarea_archivo = Tarea.objects.exclude(archivo='')
+    print(tarea_archivo)
+    mi = request.user.empleado
+    return render(request, 'emmang/portal.html', {'empleados':empleados,'tareas':tareas,'tarea_archivo':tarea_archivo,'mi':mi})
 
 @login_required
 def tareas(request):
@@ -31,26 +35,53 @@ def tareas(request):
 
 @login_required
 def tarea(request, pk):
-    return render(request, 'emmang/tarea.html')
+    tarea = get_object_or_404(Tarea, pk=pk)
+    comentarios = Comentario.objects.filter(tarea=tarea)
+    self_pk = request.user.empleado.pk
+    can_edit = self_pk == tarea.creador.pk
+    return render(request, 'emmang/tarea.html', {'tarea':tarea,'can_edit':can_edit,'self_pk':self_pk,'comentarios':comentarios})
+
+@login_required
+def comentario(request, e_pk, t_pk):
+    if request.method == 'POST':
+        form = ComentarioForm(request.POST)
+        print(form)
+        if form.is_valid():
+            empleado = get_object_or_404(Empleado, pk=e_pk)
+            tarea = get_object_or_404(Tarea, pk=t_pk)
+            comentario = form.save(commit=False)
+            comentario.empleado = empleado
+            comentario.tarea = tarea
+            comentario.fecha = timezone.now()
+            comentario.save()
+            return redirect('emmang:tarea', pk=t_pk)
 
 @login_required
 def empleados(request):
+    message = False
     if request.method == 'POST':
-        form = TareaForm(request.POST, request.FILES)
+        form = UserCreateForm(request.POST)
+        print(form)
         if form.is_valid():
-            tarea = form.save(commit=False)
-            tarea.creador = request.user.empleado
-            tarea.fecha = timezone.now()
-            tarea.save()
-            message = tarea.tema
+            print('nice')
+            print(form)
+            user = form.save()
+            empleado = Empleado.objects.create(usuario=user, puesto=form.cleaned_data["puesto"])
+            empleado.save()
+            print(empleado)
+            message = user.username
     else:
-        form = TareaForm()
-        message = False
+        form = UserCreateForm()
     empleados = Empleado.objects.all()
     return render(request, 'emmang/empleados.html', {'form':form,'message':message,'empleados':empleados})
 
 @login_required
-def perfil(request):
-    empleado = get_object_or_404(Empleado, pk=request.user.empleado.pk)
+def perfil_personal(request):
+    return redirect('emmang:perfil', pk=request.user.empleado.pk)
+
+@login_required
+def perfil(request, pk):
+    empleado = get_object_or_404(Empleado, pk=pk)
     tareas = Tarea.objects.filter(creador=empleado).order_by('-fecha')
-    return render(request, 'emmang/perfil.html', {'empleado':empleado,'tareas':tareas})
+    comentarios = Comentario.objects.filter(empleado=empleado)
+    return render(request, 'emmang/perfil.html', {'empleado':empleado,'tareas':tareas,'comentarios':comentarios})

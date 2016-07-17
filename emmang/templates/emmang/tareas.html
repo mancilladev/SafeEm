@@ -21,49 +21,56 @@
       {% csrf_token %}
       <div class="field">
         <label>Tema</label>
-        <input type="text" name="tema" required="">
+        <input type="text" name="tema" placeholder="Titulo o proyecto" required="">
       </div>
       <div class="field">
         <label>Información</label>
-        <textarea rows="2" name="texto" required=""></textarea>
+        <textarea rows="2" name="texto" placeholder="Descripcion" required=""></textarea>
       </div>
-      <div class="ui icon left floated button" id="divUpload">
-          <i class="file icon"></i>
-     </div>
-     <input type="file" id="hidden-new-file" style="display: none" name="archivo">
-     <button type="submit" class="ui primary right floated button">Publicar</button>
-   </form>
- </div>
+      <div class="ui left floated button" id="divUpload">
+          <i class="file icon"></i> <span id="file-name">Adjuntar</span>
+      </div>
+      <input type="file" id="hidden-new-file" style="display: none" name="archivo" onchange="cambiarNombre()">
+      <button type="submit" class="ui primary right floated button">Publicar</button>
+    </form>
+  </div>
 
   <div class="ui basic separated segment">
     <h1 class="ui center aligned header">Tareas</h1>
     <div class="ui relaxed divided list">
       {% for tarea in tareas %}
       <div class="item">
-        {% if tarea.creador.imagen %}
-          <img class="ui avatar image" src="media/{{tarea.creador.imagen.url}}">
+        {% if tarea.archivo %}
+          <i class="large file middle aligned icon"></i>
         {% else %}
-          <img class="ui avatar image" src="{% static "img/smallmatthew.png" %}">
+          <i class="large idea middle aligned icon"></i>
         {% endif %}
         <div class="content">
-          <a class="header">{{tarea.tema}}</a>
-          <div class="description">{{tarea.fecha|naturaltime}}</div>
+          <a class="header" href="{% url 'emmang:tarea' pk=tarea.pk %}">{{tarea.tema}}</a>
+          <div class="description">Tarea creada {{tarea.fecha|naturaltime|lower}}</div>
         </div>
       </div>
       {% endfor %}
     </div>
   </div>
+  
 </div>
-
 {% include 'emmang/footer.html' %}
 {% endblock content %}
 
 {% block heavyjs %}
 <script type="text/javascript">
 $(document).ready(function() {
+
   $('#divUpload').on("click", function() {
     $('#hidden-new-file').click();
   });
+
+  $('#hidden-new-file').change(function() {
+    var fname = $(this).val().split('\\').pop();
+    $('#file-name').text(fname);
+  });
+
 });
 </script>
 {% endblock heavyjs %}
