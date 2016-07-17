@@ -2,18 +2,7 @@
 {% load staticfiles %}
 
 {% block content %}
-<div class="ui fixed inverted menu">
-  <div class="ui container">
-    <a href="" class="header item">
-      <img class="logo" src="{% static "img/icon-white.png" %}">
-      Emmang
-    </a>
-    <a href="" class="item">Tareas</a>
-    <a href="" class="item">Mi perfil</a>
-    <a href="{% url 'logout' %}" class="right item">Cerrar sesión</a>
-  </div>
-</div>
-
+{% include 'emmang/navbar.html' %}
 <div class="ui main text container contenido-portal">
   <h1 class="ui center aligned header">Empleados</h1>
   <div class="ui very relaxed middle aligned divided list">
@@ -55,12 +44,5 @@
   </div>
 </div>
 
-<div class="ui inverted vertical footer segment">
-  <div class="ui center aligned container">
-    <div class="ui horizontal inverted small divided link list">
-      <a class="item" href="{% url 'emmang:home' %}">Regresar al sitio web</a>
-      <a class="item" href="{% url 'logout' %}">Cerrar sesión</a>
-    </div>
-  </div>
-</div>
+{% include 'emmang/footer.html' %}
 {% endblock content %}

@@ -1,0 +1,58 @@
+{% extends 'emmang/base.html' %}
+{% load staticfiles %}
+{% load humanize %}
+
+{% block content %}
+{% include 'emmang/navbar.html' %}
+<div class="ui main text container contenido-portal">
+  <div class="ui centered card">
+    <div class="image">
+      {% if empleado.imagen %}
+        <img src="media/{{empleado.imagen.url}}">
+      {% else %}
+        <img src="{% static "img/matthew.png" %}">
+      {% endif %}
+    </div>
+    <div class="content">
+      <div class="header">{{empleado.usuario.username}}</div>
+      <div class="meta">
+        <a>{{empleado.puesto}}</a>
+      </div>
+      <div class="description">
+        Matthew is an interior designer living in New York.
+      </div>
+    </div>
+    <div class="extra content">
+      <span class="right floated">
+        Algo
+      </span>
+      <span>
+        <i class="feed icon"></i>
+        {{tareas|length}} Tareas
+      </span>
+    </div>
+  </div>
+
+  <div class="ui basic separated segment">
+    <h1 class="ui center aligned header">Tareas</h1>
+    <div class="ui relaxed divided list">
+      {% for tarea in tareas %}
+      <div class="item">
+        {% if tarea.archivo %}
+          <i class="large file middle aligned icon"></i>
+        {% else %}
+          <i class="large comments middle aligned icon"></i>
+        {% endif %}
+        <div class="content">
+          <a class="header" href="">{{tarea.tema}}</a>
+          <div class="description">{{tarea.fecha|naturaltime}}</div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+</div>
+
+{% include 'emmang/footer.html' %}
+{% endblock content %}
