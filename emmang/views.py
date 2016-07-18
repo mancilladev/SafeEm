@@ -11,8 +11,8 @@ def home(request):
 @login_required
 def portal(request):
     empleados = Empleado.objects.all()
-    tareas = Tarea.objects.all()
-    tarea_archivo = Tarea.objects.exclude(archivo='')
+    tareas = Tarea.objects.all().order_by('-fecha')
+    tarea_archivo = Tarea.objects.exclude(archivo='').order_by('-fecha')
     mi = request.user.empleado
     return render(request, 'emmang/portal.html', {'empleados':empleados,'tareas':tareas,'tarea_archivo':tarea_archivo,'mi':mi})
 
@@ -95,6 +95,6 @@ def perfil_editar(request):
 def perfil(request, pk):
     empleado = get_object_or_404(Empleado, pk=pk)
     tareas = Tarea.objects.filter(creador=empleado).order_by('-fecha')
-    comentarios = Comentario.objects.filter(empleado=empleado)
+    comentarios = Comentario.objects.filter(empleado=empleado).order_by('-fecha')
     can_edit = request.user.empleado == empleado
     return render(request, 'emmang/perfil.html', {'empleado':empleado,'tareas':tareas,'comentarios':comentarios,'can_edit':can_edit})
