@@ -9,7 +9,7 @@
 
     <div class="ui left very close rail">
       <div class="ui segment">
-        <h3>Archivos</h3>
+        <h3>Últimos 10 archivos</h3>
         <div class="ui list">
           {% for tarea in tarea_archivo %}
           <a class="item" href="{{tarea.archivo.url}}">
@@ -20,17 +20,21 @@
       </div>
     </div>
 
-    <div class="ui tertiary green inverted padded center aligned segment">
-      <h1>Resumen</h1>
-    </div>
-
-    <div class="ui basic separated segment">
-      <h2 class="ui center aligned header">Posts</h2>
+    <div class="ui basic segment">
+      <h2 class="ui center aligned header">Últimos 10 posts</h2>
       <div class="ui relaxed divided list">
         {% for tarea in tareas %}
         <div class="item">
           {% if tarea.archivo %}
-            <i class="large file middle aligned icon"></i>
+            {% if '.pdf' in tarea.archivo.name %}
+                <i class="large file pdf outline middle aligned icon"></i>
+            {% elif '.word' in tarea.archivo.name %}
+                <i class="large file word outline middle aligned icon"></i>
+            {% elif '.txt' in tarea.archivo.name %}
+                <i class="large file text outline middle aligned icon"></i>
+            {% else %}
+                <i class="large file image outline middle aligned icon"></i>
+            {% endif %}
           {% else %}
             <i class="large idea middle aligned icon"></i>
           {% endif %}
@@ -44,7 +48,7 @@
     </div>
 
     <div class="ui basic separated segment">
-      <h2 class="ui center aligned header">Empleados</h2>
+      <h2 class="ui center aligned header">Todos los integrantes</h2>
       <div class="ui very relaxed middle aligned divided list">
         {% for empleado in empleados %}
         <div class="item">

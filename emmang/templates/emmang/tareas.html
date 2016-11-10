@@ -40,11 +40,19 @@
     <div class="ui relaxed divided list">
       {% for tarea in tareas %}
       <div class="item">
-        {% if tarea.archivo %}
-          <i class="large file middle aligned icon"></i>
-        {% else %}
-          <i class="large idea middle aligned icon"></i>
-        {% endif %}
+          {% if tarea.archivo %}
+            {% if '.pdf' in tarea.archivo.name %}
+                <i class="large file pdf outline middle aligned icon"></i>
+            {% elif '.word' in tarea.archivo.name %}
+                <i class="large file word outline middle aligned icon"></i>
+            {% elif '.txt' in tarea.archivo.name %}
+                <i class="large file text outline middle aligned icon"></i>
+            {% else %}
+                <i class="large file image outline middle aligned icon"></i>
+            {% endif %}
+          {% else %}
+            <i class="large idea middle aligned icon"></i>
+          {% endif %}
         <div class="content">
           <a class="header" href="{% url 'emmang:tarea' pk=tarea.pk %}">{{tarea.tema}}</a>
           <div class="description">Tarea creada por <a href="{% url 'emmang:perfil' pk=tarea.creador.pk %}">{{tarea.creador}}</a> {{tarea.fecha|naturaltime|lower}}</div>

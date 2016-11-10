@@ -11,10 +11,9 @@ def home(request):
 @login_required
 def portal(request):
     empleados = Empleado.objects.all()
-    tareas = Tarea.objects.all().order_by('-fecha')
-    tarea_archivo = Tarea.objects.exclude(archivo='').order_by('-fecha')
-    mi = request.user.empleado
-    return render(request, 'emmang/portal.html', {'empleados':empleados,'tareas':tareas,'tarea_archivo':tarea_archivo,'mi':mi})
+    tareas = Tarea.objects.all().order_by('-fecha')[:10]
+    tarea_archivo = Tarea.objects.exclude(archivo='').order_by('-fecha')[:10]
+    return render(request, 'emmang/portal.html', {'empleados':empleados,'tareas':tareas,'tarea_archivo':tarea_archivo})
 
 @login_required
 def tareas(request):

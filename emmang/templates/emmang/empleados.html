@@ -7,12 +7,12 @@
 
   {% if user.is_staff %}
   <div class="ui basic segment">
-    <h1 class="ui center aligned header">Nuevo empleado</h1>
+    <h1 class="ui center aligned header">Nuevo integrante</h1>
     {% if message %}
       <div class="ui success message">
         <i class="close icon"></i>
         <div class="header">
-          Nuevo empleado registrado
+          Nuevo integrante registrado
         </div>
         <p>{{message}}</p>
       </div>
@@ -33,7 +33,7 @@
           <input type="email" name="email" placeholder="john@doe.com" required="">
         </div>
         <div class="field">
-          <label>Puesto</label>
+          <label>Puesto/Cargo</label>
           <input type="text" name="puesto" placeholder="Gerente" required="">
         </div>
         <div class="field">
@@ -72,12 +72,12 @@
     <div class="header">
       Lamentamos las inconveniencias
     </div>
-    <p>Solo el staff autorizado puede agregar nuevos empleados.</p>
+    <p>Solo el staff autorizado puede agregar nuevos integrantes.</p>
   </div>
  {% endif %}
 
  <div class="ui basic separated segment">
-   <h1 class="ui center aligned header">Empleados</h1>
+   <h1 class="ui center aligned header">Integrantes</h1>
    <div class="ui very relaxed middle aligned divided list">
      {% for empleado in empleados %}
      <div class="item">
