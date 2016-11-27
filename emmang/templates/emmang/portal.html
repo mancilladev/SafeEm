@@ -9,7 +9,7 @@
 
     <div class="ui left very close rail">
       <div class="ui segment">
-        <h3>Últimos 10 archivos</h3>
+        <h3>Últimos 20 archivos</h3>
         <div class="ui list">
           {% for tarea in tarea_archivo %}
           <a class="item" href="{{tarea.archivo.url}}">
@@ -17,6 +17,20 @@
           </a>
           {% endfor %}
         </div>
+      </div>
+    </div>
+
+    <div class="ui right very close rail">
+      <div class="ui segment">
+        <h3>Espacio en disco</h3>
+        <div class="ui teal progress" data-percent="{{usage}}" id="used-space">
+            <div class="bar">
+                <div class="progress"></div>
+            </div>
+            <div class="label">Espacio utilizado</div>
+        </div>
+        <p>Gb utilizados: {{gbused|floatformat:2}}</p>
+        <p>Gb disponibles para el equipo: {{gbdef|floatformat:2}}</p>
       </div>
     </div>
 
@@ -47,28 +61,14 @@
       </div>
     </div>
 
-    <div class="ui basic separated segment">
-      <h2 class="ui center aligned header">Todos los integrantes</h2>
-      <div class="ui very relaxed middle aligned divided list">
-        {% for empleado in empleados %}
-        <div class="item">
-          {% if empleado.imagen %}
-            <img class="ui avatar image" src="{{empleado.imagen.url}}">
-          {% else %}
-            <img class="ui avatar image" src="{% static "img/smallmatthew.png" %}">
-          {% endif %}
-          <div class="content">
-            <a href="{% url 'emmang:perfil' pk=empleado.pk %}" class="header">{{empleado}}</a>
-            <div class="description">{{empleado.puesto}}</div>
-          </div>
-        </div>
-        {% endfor %}
-      </div>
-    </div>
-
-
-
   </div>
 </div>
 {% include 'emmang/footer.html' %}
 {% endblock content %}
+
+
+{% block heavyjs %}
+<script type="text/javascript" charset="utf-8">
+    $('#used-space').progress();
+</script>
+{% endblock %}

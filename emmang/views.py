@@ -1,3 +1,4 @@
+import os
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
@@ -5,15 +6,30 @@ from django.utils import timezone
 from .models import Empleado, Tarea, Comentario
 from .forms import TareaForm, UserCreateForm, ComentarioForm, EmpleadoForm, TareaForm
 
+
+DEFUALTGB = 1
+
+def get_size(start_path = '.'):
+    total_size = 0
+    for dirpath, dirnames, filenames in os.walk(start_path):
+        for f in filenames:
+            fp = os.path.join(dirpath, f)
+            total_size += os.path.getsize(fp)
+    return total_size
+
 def home(request):
     return render(request, 'emmang/home.html')
 
 @login_required
 def portal(request):
-    empleados = Empleado.objects.all()
     tareas = Tarea.objects.all().order_by('-fecha')[:10]
-    tarea_archivo = Tarea.objects.exclude(archivo='').order_by('-fecha')[:10]
-    return render(request, 'emmang/portal.html', {'empleados':empleados,'tareas':tareas,'tarea_archivo':tarea_archivo})
+    tarea_archivo = Tarea.objects.exclude(archivo='').order_by('-fecha')[:20]
+    gb = get_size('media/docs') / 1073741824
+    return render(
+        request,
+        'emmang/portal.html',
+        {'tareas':tareas,'tarea_archivo':tarea_archivo,'usage':gb*100/DEFUALTGB,'gbdef':DEFUALTGB,'gbused':gb}
+    )
 
 @login_required
 def tareas(request):
@@ -93,7 +109,12 @@ def perfil_editar(request):
 @login_required
 def perfil(request, pk):
     empleado = get_object_or_404(Empleado, pk=pk)
-    tareas = Tarea.objects.filter(creador=empleado).order_by('-fecha')
-    comentarios = Comentario.objects.filter(empleado=empleado).order_by('-fecha')
+    tareas = Tarea.objects.filter(creador=empleado).order_by('-fecha')[:3]
+    comentarios = Comentario.objects.filter(empleado=empleado).order_by('-fecha')[:3]
     can_edit = request.user.empleado == empleado
-    return render(request, 'emmang/perfil.html', {'empleado':empleado,'tareas':tareas,'comentarios':comentarios,'can_edit':can_edit})
+    numposts = Tarea.objects.filter(creador=empleado).count()
+    return render(
+        request,
+        'emmang/perfil.html',
+        {'empleado':empleado,'tareas':tareas,'comentarios':comentarios,'can_edit':can_edit,'numposts':numposts}
+    )

@@ -79,14 +79,14 @@ $(document).ready(function() {
           {% endif %}
           <span>
             <i class="feed icon"></i>
-            {{tareas|length}} Posts
+            {{numposts}} Posts
           </span>
         </div>
       </div>
     </div>
     <div class="column">
       <div class="ui basic segment">
-        <h1 class="ui center aligned header">Posts</h1>
+        <h1 class="ui center aligned header">Posts recientes</h1>
         <div class="ui relaxed divided list">
           {% for tarea in tareas %}
           <div class="item">
@@ -106,7 +106,7 @@ $(document).ready(function() {
           </div>
           {% endfor %}
         </div>
-        <h1 class="ui center aligned separated header">Comentarios</h1>
+        <h1 class="ui center aligned separated header">Comentarios recientes</h1>
         <div class="ui relaxed divided list">
           {% for comentario in comentarios %}
           <div class="item">
